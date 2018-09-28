@@ -1,13 +1,71 @@
 import React, { Component } from 'react';
+import { Field, reduxForm } from 'redux-form';
 
 class PostsNew extends Component {
-    render() {
+    renderField(field) {
         return(
-            <div>
-                POST NEW!
+            <div className="form-group">
+                <label>{field.label}</label>
+                <input 
+                    className="form-control"
+                    type="text"
+                    {...field.input}
+                />
+                {field.meta.error}
             </div>
+        )
+    }
+
+    onSubmit(values) {
+        console.log(values);
+    }
+
+    render() {
+        const { handleSubmit } = this.props;
+
+        return(
+            <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
+                <Field
+                    label="Title" 
+                    name="title"
+                    component={this.renderField}
+                />
+                <Field
+                    label="Categories"
+                    name="categories"
+                    component={this.renderField}
+                />
+                <Field
+                    label="Content"
+                    name="content"
+                    component={this.renderField}
+                />
+                <button type="sbutm" className="btn btn-primary">Submit</button>
+            </form>
         )
     }
 }
 
-export default PostsNew;
+const validate = (values) => {
+    const errors = {};
+
+    // Validate the inputs from 'values
+    if(!values.title){
+        errors.title = "Enter a title";
+    }
+
+    if(!values.categories) {
+        errors.categories = "Enter a category";
+    }
+
+    if(!values.content) {
+        errors.content = "Enter some content for the blog post";
+    }
+
+    return errors;
+}
+
+export default reduxForm({
+    validate,
+    form: 'PostsNewForm'
+})(PostsNew);
