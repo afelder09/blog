@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-import { FETCH_POSTS, FETCH_POST } from '../actions/types';
+import { FETCH_POSTS, FETCH_POST, DELETE_POST } from '../actions/types';
 
 export default function(state = {}, action) {
     switch(action.type) {
@@ -8,10 +8,8 @@ export default function(state = {}, action) {
             return _.mapKeys(action.payload.data, 'id');
         case FETCH_POST:
             return { ...state, [action.payload.data.id]: action.payload.data };
-            // const post = action.payload.data;
-            // const newState = { ...state };
-            // newState[post.id] = post;
-            // return newState;
+        case DELETE_POST:
+            return _omit(state, action.payload);
         default:
             return state;
     }
